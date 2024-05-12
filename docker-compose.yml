@@ -5,24 +5,16 @@ services:
     image: caddy:alpine
     restart: unless-stopped
     ports:
-      - '${HTTP}:80'
-      - '${HTTPS}:443'
+      - '80:80'
+      - '443:443'
     volumes:
       - caddy-config:/config
       - caddy-data:/data
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - frontend-files:/usr/share/caddy
+      - ./frontend:/usr/share/caddy
     environment:
       - DOMAIN=${DOMAIN}
-    depends_on:
-      frontend:
-        condition: service_completed_successfully
-  frontend:
-    build: ./frontend
-    volumes:
-      - frontend-files:/app/dist
 
 volumes:
   caddy-config:
   caddy-data:
-  frontend-files:
