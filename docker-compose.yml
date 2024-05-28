@@ -15,6 +15,9 @@ services:
       - ./frontend:/usr/share/caddy
     environment:
       - DOMAIN=${DOMAIN}
+  api:
+    build: ./api
+    restart: unless-stopped
 
 volumes:
   caddy-config:
