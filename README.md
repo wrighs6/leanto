@@ -17,7 +17,7 @@ leanto is a simple task management application designed to simplify the process 
 ## Installation 
 
 
-## Demonstration 
+## Usage 
 
 
 ## License 
