@@ -1,7 +1,7 @@
 # leanto
 
 ## Introduction 
-leanto is a simple task management application designed to simplify the process of being on multiple teams. For students, it is common to be a part of multiple different projects. leanto aims to provide an interface to display the tasks from each projects while also providing an interface to interact with additional project specific data and controls. 
+leanto is a simple task management application designed to simplify the process of being on multiple teams. It is common to be a part of multiple different projects. leanto aims to provide an interface to display the tasks from each projects while also providing an interface to interact with additional project specific data and controls. This application is aimed towards students and professionals alike.
 
 ## Goals
 + Primarily, focus on developing a product suitable to be hosted publicly. 
@@ -21,4 +21,4 @@ leanto is a simple task management application designed to simplify the process 
 
 
 ## License 
-This repository is under the ``MIT License``. This project can be forked and is free to use under the ``MIT License``.
+This repository is under the [MIT License](https://opensource.org/license/mit), as such this project can be forked and is free to use.
