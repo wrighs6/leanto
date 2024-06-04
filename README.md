@@ -4,7 +4,10 @@
 leanto is a simple task management application designed to simplify the process of being on multiple teams. For students, it is common to be a part of multiple different projects. leanto aims to provide an interface to display the tasks from each projects while also providing an interface to interact with additional project specific data and controls. 
 
 ## Goals
-+ Primarily, focus on developing a product suitable to be hosted publicly. + Essential task management features: tasks can be created within a team, given a due date, priority, and status, and assigned to and completed by a team member + A “My Tasks” interface displaying all the user’s tasks on one page + A simple system for user authentication and authorization, built to be replaced by a more comprehensive solution later in development 
++ Primarily, focus on developing a product suitable to be hosted publicly. 
++ Essential task management features: tasks can be created within a team, given a due date, priority, and status, and assigned to and completed by a team member 
++ A “My Tasks” interface displaying all the user’s tasks on one page 
++ A simple system for user authentication and authorization, built to be replaced by a more comprehensive solution later in development 
 
 
 ## Tech stack 
