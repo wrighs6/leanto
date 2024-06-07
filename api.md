@@ -16,6 +16,9 @@
 ]
 ```
 
+### POST
+* **Description** Creates a new task and adds it to the existing list of tasks
+
 ## `/teams`
 ### GET
 * **Description** Retrieve a list of all teams.
@@ -32,6 +35,9 @@
   }
 ]
 ```
+
+### POST
+* **Description** Creates a new team and adds it to existing list of teams 
 
 ## `/users`
 ### GET
@@ -53,3 +59,6 @@
   }
 ]
 ```
+
+### POST
+* **Description** Creates a new user and adds it to the existing list of users 
