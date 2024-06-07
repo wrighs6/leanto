@@ -28,7 +28,7 @@ type User struct {
 	Teams []string `json:"teams"`
 }
 
-func examples() {
+func getUsers() []User {
 	// create some users
 	user1 := User{
 		Name:  "Stephen Wright",
@@ -53,6 +53,10 @@ func examples() {
 	users = append(users, user3)
 	users = append(users, user4)
 
+	return users
+}
+
+func getTeams() []Team {
 	// create some teams
 	team1 := Team{
 		Name:    "Team 1",
@@ -71,7 +75,10 @@ func examples() {
 	teams = append(teams, team1)
 	teams = append(teams, team2)
 	teams = append(teams, team3)
+	return teams
+}
 
+func getTasks() []Task {
 	// create some tasks
 	// examples of status: Not started, Started, Done
 	task1 := Task{
@@ -100,4 +107,5 @@ func examples() {
 	tasks = append(tasks, task1)
 	tasks = append(tasks, task2)
 	tasks = append(tasks, task3)
+	return tasks
 }
