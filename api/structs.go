@@ -24,7 +24,6 @@ Holds the information of users
 */
 type User struct {
 	Name  string   `json:"name"`
-	Tasks []string `json:"tasks"`
 	Teams []string `json:"teams"`
 }
 
