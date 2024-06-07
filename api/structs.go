@@ -14,7 +14,7 @@ Holds the different tasks/files from the user
 type Task struct {
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	AssignedTo  []string `json:"assingment"`
+	AssignedTo  []string `json:"assignedTo"`
 	Priority    string   `json:"priority"`
 	Status      string   `json:"status"`
 }
