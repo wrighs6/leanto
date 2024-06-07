@@ -18,6 +18,8 @@ services:
   api:
     build: ./api
     restart: unless-stopped
+    environment:
+      - DB_CONN="mongodb://root:${DB_ROOT_PASSWORD}@db"
   db:
     image: mongo:latest
     restart: unless-stopped
