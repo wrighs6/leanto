@@ -18,7 +18,16 @@ services:
   api:
     build: ./api
     restart: unless-stopped
+  db:
+    image: mongo:latest
+    restart: unless-stopped
+    volumes:
+      - db-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
 
 volumes:
   caddy-config:
   caddy-data:
+  db-data:
