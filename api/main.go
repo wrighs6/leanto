@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -14,24 +13,34 @@ import (
 )
 
 func main() {
+	// Specify BSON options that cause the driver to fallback to "json"
+	// struct tags if "bson" struct tags are missing, marshal nil Go maps as
+	// empty BSON documents, and marshals nil Go slices as empty BSON
+	// arrays.
+	bsonOpts := &options.BSONOptions{
+		UseJSONStructTags: true,
+		NilMapAsEmpty:     true,
+		NilSliceAsEmpty:   true,
+	}
+
+	opts := options.Client().ApplyURI(os.Getenv("DB_CONN")).SetBSONOptions(bsonOpts)
+
 	// Create a new client and connect to the db container
-	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(os.Getenv("DB_CONN")))
+	client, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
 		panic(err)
 	}
+	defer func() {
+		if err = client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
 
-	// Send a ping to confirm a successful connection
-	var result bson.M
-	if err := client.Database("admin").RunCommand(context.TODO(), bson.D{{"ping", 1}}).Decode(&result); err != nil {
-		panic(err)
-	}
-	fmt.Println("Pinged your deployment. You successfully connected to MongoDB!")
+	tasks := client.Database("leanto").Collection("tasks")
+	teams := client.Database("leanto").Collection("teams")
+	users := client.Database("leanto").Collection("users")
 
 	mux := http.NewServeMux()
-
-	tasks := getTasks()
-	teams := getTeams()
-	users := getUsers()
 
 	mux.HandleFunc("POST /tasks", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
@@ -40,13 +49,23 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		tasks = append(tasks, newTask)
+		_, err = tasks.InsertOne(context.TODO(), newTask)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	mux.HandleFunc("GET /tasks", func(w http.ResponseWriter, r *http.Request) {
+		cursor, err := tasks.Find(context.TODO(), bson.D{{}})
+		var results []Task
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(tasks)
+		json.NewEncoder(w).Encode(results)
 	})
+
 	mux.HandleFunc("POST /teams", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var newTeam Team
@@ -54,12 +73,21 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		teams = append(teams, newTeam)
+		_, err = teams.InsertOne(context.TODO(), newTeam)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	mux.HandleFunc("GET /teams", func(w http.ResponseWriter, r *http.Request) {
+		cursor, err := teams.Find(context.TODO(), bson.D{{}})
+		var results []Team
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(teams)
+		json.NewEncoder(w).Encode(results)
 	})
 
 	mux.HandleFunc("POST /users", func(w http.ResponseWriter, r *http.Request) {
@@ -69,12 +97,21 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		users = append(users, newUser)
+		_, err = users.InsertOne(context.TODO(), newUser)
+		if err != nil {
+			panic(err)
+		}
 	})
 
 	mux.HandleFunc("GET /users", func(w http.ResponseWriter, r *http.Request) {
+		cursor, err := users.Find(context.TODO(), bson.D{{}})
+		var results []User
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(users)
+		json.NewEncoder(w).Encode(results)
 	})
 
 	if err := http.ListenAndServe(":80", mux); err != nil {

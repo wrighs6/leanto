@@ -1,9 +1,12 @@
 package main
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 /*
 Holds the different teams
 */
 type Team struct {
+	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name    string   `json:"name"`
 	Members []string `json:"members"`
 }
@@ -12,6 +15,7 @@ type Team struct {
 Holds the different tasks/files from the user
 */
 type Task struct {
+	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
 	AssignedTo  []string `json:"assignedTo"`
@@ -23,6 +27,7 @@ type Task struct {
 Holds the information of users
 */
 type User struct {
+	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name  string   `json:"name"`
 	Teams []string `json:"teams"`
 }
