@@ -4,5 +4,6 @@
 }
 
 api.{$DOMAIN} {
+  header Access-Control-Allow-Origin https://{$DOMAIN}
   reverse_proxy api
 }
