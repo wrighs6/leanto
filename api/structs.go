@@ -20,6 +20,7 @@ type Task struct {
 	Description string   `json:"description"`
 	Team string `json:"team"`
 	AssignedTo  []string `json:"assignedTo"`
+	DueDate primitive.DateTime `json:"dueDate"`
 	Priority    string   `json:"priority"`
 	Status      string   `json:"status"`
 }
