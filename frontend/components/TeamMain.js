@@ -13,7 +13,23 @@ export default function TeamMain() {
 
   return html`
     <main>
-      ${tasks.map((task) => html`<div class="task-row">${task.name}</div>`)}
+      <div class="task-row border">
+        <div class="header"> Name </div>
+        <div class="header"> Assigned </div>
+        <div class="header"> Due Date </div>
+        <div class="header"> Task Priority </div>
+        <div class="header"> Task Status </div>
+      </div class="header">
+      ${tasks.map(
+        (task) =>
+          html`<div class="task-row border">
+            <div class="section">${task.name}</div>
+            <div class="section">${task.assignedTo}</div>
+            <div class="section">${task.dueDate}</div>
+            <div class="section">${task.priority}</div>
+            <div class="status">${task.status}</div>
+          </div>`,
+      )}
     </main>
   `;
 }
