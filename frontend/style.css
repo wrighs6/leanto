@@ -46,9 +46,9 @@ main {
 }
 
 .border:hover {
-  padding: 30px;
+  padding: 20px;
   border: 1px solid #000000;
-  box-shadow: pink 0px 1px 3px 5px;
+  box-shadow: grey 0px 1px 3px 5px;
   background-color: #fffa;
 }
 
@@ -71,9 +71,46 @@ main {
   display: inline-block;
   box-sizing: border-box;
   max-width: 300px;
-  padding: 3px;
+  padding: 7px;
   border-radius: 10px;
   border-width: 3px;
   border-style: solid;
   border-color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.add-task {
+  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  padding: 10px;
+  border: 1px solid black;
+  margin: 0.5em 0;
+  background-color: #e5e4e2;
+
+
+  border: 1px solid #000000;
+  border-radius: 15px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+
+  box-shadow: rgb(225 225 225) 0px 2px 8px 0px;
+}
+
+.button:hover {
+  box-shadow: grey 0px 1px 3px 5px;
+}
+
+.left-button {
+  float: left;
+  display: inline-block;
+}
+.right-button {
+  float: right;
+  display: inline-block;
 }
