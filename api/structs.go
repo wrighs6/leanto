@@ -2,13 +2,18 @@ package main
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
+type NameIDPair struct {
+  Name string `json:"name"`
+  ID primitive.ObjectID `json:"id"`
+}
+
 /*
 Holds the different teams
 */
 type Team struct {
 	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name    string   `json:"name"`
-	Members []string `json:"members"`
+	Members []NameIDPair `json:"members"`
 }
 
 /*
@@ -18,8 +23,8 @@ type Task struct {
 	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	Team string `json:"team"`
-	AssignedTo  []string `json:"assignedTo"`
+	Team NameIDPair `json:"team"`
+	AssignedTo  []NameIDPair `json:"assignedTo"`
 	DueDate primitive.DateTime `json:"dueDate"`
 	Priority    string   `json:"priority"`
 	Status      string   `json:"status"`
@@ -31,9 +36,10 @@ Holds the information of users
 type User struct {
 	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name  string   `json:"name"`
-	Teams []string `json:"teams"`
+	Teams []NameIDPair `json:"teams"`
 }
 
+/* will need to be updated to work with updated structs
 func getUsers() []User {
 	// create some users
 	user1 := User{
@@ -115,3 +121,4 @@ func getTasks() []Task {
 	tasks = append(tasks, task3)
 	return tasks
 }
+*/

@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -49,10 +50,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		_, err = tasks.InsertOne(context.TODO(), newTask)
+		result, err := tasks.InsertOne(context.TODO(), newTask)
 		if err != nil {
 			panic(err)
 		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
 	})
 
 	mux.HandleFunc("GET /tasks", func(w http.ResponseWriter, r *http.Request) {
@@ -73,10 +76,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		_, err = teams.InsertOne(context.TODO(), newTeam)
+		result, err := teams.InsertOne(context.TODO(), newTeam)
 		if err != nil {
 			panic(err)
 		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
 	})
 
 	mux.HandleFunc("GET /teams", func(w http.ResponseWriter, r *http.Request) {
@@ -97,10 +102,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		_, err = users.InsertOne(context.TODO(), newUser)
+		result, err := users.InsertOne(context.TODO(), newUser)
 		if err != nil {
 			panic(err)
 		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
 	})
 
 	mux.HandleFunc("GET /users", func(w http.ResponseWriter, r *http.Request) {
