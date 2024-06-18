@@ -28,6 +28,29 @@ main {
   background-color: #e5e4e2;
 }
 
+form {
+  width: 550px;
+  height: 350px;
+
+  padding: 5px;
+}
+
+ul {
+  padding: 0px;
+  list-style-type: none;
+}
+
+ul>li {
+  padding: 6px;
+}
+
+.close-button {
+  border: none;
+  float: right;
+  background-color: #fff;
+}
+
+
 .task-row {
   padding: 4px;
   display: flex;
@@ -110,7 +133,6 @@ main {
   border-color: black;
 
   box-shadow: rgb(225 225 225) 0px 2px 8px 0px;
-  text-align: center;
 }
 
 .button:hover {
@@ -119,10 +141,8 @@ main {
 
 .left-button {
   float: left;
-  display: inline-block;
 }
 
 .right-button {
   float: right;
-  display: inline-block;
 }

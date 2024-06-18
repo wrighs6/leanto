@@ -26,7 +26,64 @@ export default function TeamMain() {
         <button class="left-button button">Filter</button>
       </div>
       <div class="add-task">
-        <button class="left-button button">Add Task</button>
+        <button popovertarget="my-popover" class="right-button button">
+          Add Task
+        </button>
+
+        <div id="my-popover" popover="manual">
+          <button
+            class="close-button"
+            popovertarget="my-popover"
+            popovertargetaction="hide"
+            type="button"
+            aria-label="Close alert"
+          >
+            <span aria-hidden="true">❌</span>
+          </button>
+          <form method="post">
+            <ul>
+              <li>
+                <label for="name">Name:</label><br />
+                <input type="text" id="name" name="name" /><br />
+              </li>
+              <li>
+                <label for="desc">Description:</label><br />
+                <textarea id="desc" name="user_message"></textarea><br />
+              </li>
+              <li>
+                <label for="date">Due Date:</label><br />
+                <input
+                  type="date"
+                  id="date"
+                  aria-describedby="date-format"
+                  min="2020-01-01"
+                  max="2030-01-01"
+                /><br />
+              </li>
+              <li>
+                <label for="priority">Priority:</label><br />
+                <select id="priority">
+                  <option label="--Select One--"></option>
+                  <option label="Low Priority"></option>
+                  <option label="Medium Priority"></option>
+                  <option label="High Priority"></option></select
+                ><br />
+              </li>
+              <li>
+                <label for="status">Status:</label><br />
+                <select id="status">
+                  <option label="--Select One--"></option>
+                  <option label="Not Started"></option>
+                  <option label="Started"></option>
+                  <option label="Done"></option></select
+                ><br />
+              </li>
+              <li>
+                <input type="submit" value="Submit" />
+              </li>
+            </ul>
+          </form>
+        </div>
       </div>
       <div class="task-row border">
         <div class="header">Name</div>
