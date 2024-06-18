@@ -1,6 +1,14 @@
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
+function addTask() {
+  console.log("Hello World\n");
+}
+
+function removeTask() {
+  console.log("Goodbye World\n");
+}
+
 export default function TeamMain() {
   const [tasks, setTasks] = useState([]);
 
@@ -13,9 +21,12 @@ export default function TeamMain() {
 
   return html`
     <main>
+      <div class="options">
+        <button class="left-button button">Sort</button>
+        <button class="left-button button">Filter</button>
+      </div>
       <div class="add-task">
-        <button class="left-button button">Remove Task</button>
-        <button class="right-button button">Add Task</button>
+        <button class="left-button button">Add Task</button>
       </div>
       <div class="task-row border">
         <div class="header">Name</div>

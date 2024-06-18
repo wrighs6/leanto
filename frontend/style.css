@@ -30,6 +30,7 @@ main {
 
 .task-row {
   padding: 4px;
+  display: flex;
 }
 
 .section {
@@ -81,9 +82,19 @@ main {
 }
 
 .add-task {
+  padding: 0px;
+  margin: 0px;
   display: inline-block;
   display: flex;
+  height: 50px;
   justify-content: space-between;
+}
+
+.options {
+  padding: 0px;
+  margin: 0px;
+  height: 50px;
+  display: inline-block;
 }
 
 .button {
@@ -92,7 +103,6 @@ main {
   margin: 0.5em 0;
   background-color: #e5e4e2;
 
-
   border: 1px solid #000000;
   border-radius: 15px;
   border-width: 2px;
@@ -100,6 +110,7 @@ main {
   border-color: black;
 
   box-shadow: rgb(225 225 225) 0px 2px 8px 0px;
+  text-align: center;
 }
 
 .button:hover {
@@ -110,6 +121,7 @@ main {
   float: left;
   display: inline-block;
 }
+
 .right-button {
   float: right;
   display: inline-block;
