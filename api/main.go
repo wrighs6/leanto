@@ -71,11 +71,27 @@ func main() {
 
 	mux.HandleFunc("POST /teams", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
-		var newTeam Team
-		err := decoder.Decode(&newTeam)
+		var providedTeam PartialTeam
+		err := decoder.Decode(&providedTeam)
 		if err != nil {
 			panic(err)
 		}
+
+		filter := bson.M{"_id": bson.M{"$in": providedTeam.Members}}
+		opts := options.Find().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		cursor, err := users.Find(context.TODO(), filter, opts)
+		if err != nil {
+			panic(err)
+		}
+		var results []NameIDPair
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
+		var newTeam Team
+		newTeam.Name = providedTeam.Name
+		newTeam.Members = results
+
 		result, err := teams.InsertOne(context.TODO(), newTeam)
 		if err != nil {
 			panic(err)
