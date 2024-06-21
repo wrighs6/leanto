@@ -6,23 +6,23 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 Holds the different teams
 */
 type Team struct {
-	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name    string   `json:"name"`
-	Members []string `json:"members"`
+	ID      primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name    string             `json:"name"`
+	Members []string           `json:"members"`
 }
 
 /*
 Holds the different tasks/files from the user
 */
 type Task struct {
-	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name        string   `json:"name"`
-	Description string   `json:"description"`
-	Team string `json:"team"`
-	AssignedTo  []string `json:"assignedTo"`
-	DueDate primitive.DateTime `json:"dueDate"`
-	Priority    string   `json:"priority"`
-	Status      string   `json:"status"`
+	ID          primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
+	Team        string             `json:"team"`
+	AssignedTo  []string           `json:"assignedTo"`
+	DueDate     primitive.DateTime `json:"dueDate"`
+	Priority    string             `json:"priority"`
+	Status      string             `json:"status"`
 }
 
 /*
@@ -30,8 +30,8 @@ Holds the information of users
 */
 type User struct {
 	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
-	Name  string   `json:"name"`
-	Teams []string `json:"teams"`
+	Name  string             `json:"name"`
+	Teams []string           `json:"teams"`
 }
 
 func getUsers() []User {

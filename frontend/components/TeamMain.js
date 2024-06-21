@@ -1,12 +1,33 @@
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
-function addTask() {
-  console.log("Hello World\n");
+async function postJSON(data) {
+  try {
+    const response = await fetch(`https://api.${window.location.host}/tasks`, {
+      method: "POST", 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
-function removeTask() {
-  console.log("Goodbye World\n");
+
+async function handleSubmit(event) {
+  event.preventDefault();
+
+  const data = new FormData(event.target);
+
+  var object = {};
+  data.forEach((value, key) => (object[key] = value));
+  var json = JSON.stringify(object);
+  postJSON(json);
 }
 
 export default function TeamMain() {
@@ -17,6 +38,8 @@ export default function TeamMain() {
     const data = await response.json();
     setTasks(data);
     console.log(data);
+    const form = document.querySelector("form");
+    form.addEventListener("submit", handleSubmit);
   }, []);
 
   return html`
@@ -43,26 +66,31 @@ export default function TeamMain() {
           <form method="post">
             <ul>
               <li>
-                <label for="name">Name:</label><br />
-                <input type="text" id="name" name="name" /><br />
+                <label for="Name">Name:</label><br />
+                <input type="text" id="Name" name="Name" /><br />
               </li>
               <li>
-                <label for="desc">Description:</label><br />
-                <textarea id="desc" name="user_message"></textarea><br />
+                <label for="Description">Description:</label><br />
+                <textarea id="Description" name="Description"></textarea><br />
               </li>
               <li>
-                <label for="date">Due Date:</label><br />
+                <label for="DueDate">Due Date:</label><br />
                 <input
                   type="date"
-                  id="date"
+                  name="DueDate"
+                  id="DueDate"
                   aria-describedby="date-format"
                   min="2020-01-01"
                   max="2030-01-01"
                 /><br />
               </li>
               <li>
-                <label for="priority">Priority:</label><br />
-                <select id="priority">
+                <label for="AssignedTo">Assigned To:</label><br />
+                <input type="text" id="AssignedTo" name="AssignedTo" /><br />
+              </li>
+              <li>
+                <label for="Priority">Priority:</label><br />
+                <select id="Priority" name="Priority">
                   <option label="--Select One--"></option>
                   <option label="Low Priority"></option>
                   <option label="Medium Priority"></option>
@@ -70,8 +98,8 @@ export default function TeamMain() {
                 ><br />
               </li>
               <li>
-                <label for="status">Status:</label><br />
-                <select id="status">
+                <label for="Status">Status:</label><br />
+                <select id="Status" name="Status">
                   <option label="--Select One--"></option>
                   <option label="Not Started"></option>
                   <option label="Started"></option>
@@ -79,7 +107,7 @@ export default function TeamMain() {
                 ><br />
               </li>
               <li>
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Add" popovertargetaction="hide" />
               </li>
             </ul>
           </form>
