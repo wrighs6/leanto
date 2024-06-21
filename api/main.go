@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -84,7 +83,7 @@ func main() {
 			panic(err)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
 	})
 
 	mux.HandleFunc("GET /tasks", func(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +125,7 @@ func main() {
 			panic(err)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
 	})
 
 	mux.HandleFunc("GET /teams", func(w http.ResponseWriter, r *http.Request) {
@@ -168,7 +167,7 @@ func main() {
 			panic(err)
 		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
 	})
 
 	mux.HandleFunc("GET /users", func(w http.ResponseWriter, r *http.Request) {
