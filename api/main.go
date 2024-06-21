@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -166,8 +167,16 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newUser.ID = result.InsertedID.(primitive.ObjectID)
+
+		update := bson.M{"$push": bson.M{"members": NameIDPair{newUser.Name, newUser.ID}}}
+		_, err = teams.UpdateMany(context.TODO(), filter, update)
+		if err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
+		json.NewEncoder(w).Encode(bson.M{"id": newUser.ID})
 	})
 
 	mux.HandleFunc("GET /users", func(w http.ResponseWriter, r *http.Request) {
