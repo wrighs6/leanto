@@ -45,11 +45,40 @@ func main() {
 
 	mux.HandleFunc("POST /tasks", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
-		var newTask Task
-		err := decoder.Decode(&newTask)
+		var providedTask PartialTask
+		err := decoder.Decode(&providedTask)
 		if err != nil {
 			panic(err)
 		}
+
+		teamFilter := bson.M{"_id": providedTask.Team}
+		teamOpts := options.FindOne().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		var teamResult NameIDPair
+		err = teams.FindOne(context.TODO(), teamFilter, teamOpts).Decode(&teamResult)
+		if err != nil {
+			panic(err)
+		}
+
+		atFilter :=  bson.M{"_id": bson.M{"$in": providedTask.AssignedTo}}
+		atOpts := options.Find().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		cursor, err := users.Find(context.TODO(), atFilter, atOpts)
+		if err != nil {
+			panic(err)
+		}
+		var atResults []NameIDPair
+		if err = cursor.All(context.TODO(), &atResults); err != nil {
+			panic(err)
+		}
+
+		var newTask Task
+		newTask.Name = providedTask.Name
+		newTask.Description = providedTask.Description
+		newTask.Team = teamResult
+		newTask.AssignedTo = atResults
+		newTask.DueDate = providedTask.DueDate
+		newTask.Priority = providedTask.Priority
+		newTask.Status = providedTask.Status
+
 		result, err := tasks.InsertOne(context.TODO(), newTask)
 		if err != nil {
 			panic(err)
