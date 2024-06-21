@@ -1,6 +1,9 @@
 package main
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"time"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type NameIDPair struct {
   Name string `json:"name"`
@@ -27,7 +30,7 @@ type Task struct {
 	Description string   `json:"description"`
 	Team NameIDPair `json:"team"`
 	AssignedTo  []NameIDPair `json:"assignedTo"`
-	DueDate primitive.DateTime `json:"dueDate"`
+	DueDate time.Time `json:"dueDate"`
 	Priority    string   `json:"priority"`
 	Status      string   `json:"status"`
 }
@@ -38,7 +41,7 @@ type PartialTask struct {
 	Description string   `json:"description"`
 	Team primitive.ObjectID `json:"team"`
 	AssignedTo  []primitive.ObjectID `json:"assignedTo"`
-	DueDate primitive.DateTime `json:"dueDate"`
+	DueDate time.Time `json:"dueDate"`
 	Priority    string   `json:"priority"`
 	Status      string   `json:"status"`
 }
