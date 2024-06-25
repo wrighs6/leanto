@@ -19,7 +19,7 @@ async function postJSON(data) {
 }
 
 
-async function handleSubmit(event) {
+function handleSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
