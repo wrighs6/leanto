@@ -7,6 +7,17 @@ export default function SideNav() {
   useEffect(async () => {
     const response = await fetch(`https://api.${window.location.host}/teams`);
     const data = await response.json();
+    if (data == null) {
+      return html`
+        <nav>
+          <ul>
+            <li><button>My Tasks</button></li>
+            <li><button>Settings</button></li>
+            <li><button>Logout</button></li>
+          </ul>
+        </nav>
+      `;
+    }
     setTeams(data);
   }, []);
 

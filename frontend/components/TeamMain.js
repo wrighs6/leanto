@@ -8,7 +8,7 @@ async function postJSON(data) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: (data),
     });
 
     const result = await response.json();
@@ -25,7 +25,23 @@ function handleSubmit(event) {
   const data = new FormData(event.target);
 
   var object = {};
-  data.forEach((value, key) => (object[key] = value));
+  //data.forEach((value, key) => (object[key] = value));
+  for (let [key,value] of data) {
+    // convert Date() types properly
+     if (key == "dueDate" && value != "") {
+      object[key] = new Date(value);
+    }
+    // add field if not empty
+    else if (key != "dueDate" && value != "") {
+      // special case for assignedTo as it is a list 
+      if (key == "assignedTo") {
+        object[key] = data.getAll("assignedTo");
+      }
+      else {
+        object[key] = value; 
+      }
+    }
+  }
   var json = JSON.stringify(object);
   postJSON(json);
 }
@@ -66,18 +82,18 @@ export default function TeamMain() {
           <form method="post">
             <ul>
               <li>
-                <label for="Name">Name:</label><br />
-                <input type="text" id="Name" name="Name" /><br />
+                <label for="name">Name:</label><br />
+                <input type="text" id="name" name="name" /><br />
               </li>
               <li>
-                <label for="Description">Description:</label><br />
-                <textarea id="Description" name="Description"></textarea><br />
+                <label for="description">Description:</label><br />
+                <textarea id="description" name="description"></textarea><br />
               </li>
               <li>
-                <label for="DueDate">Due Date:</label><br />
+                <label for="dueDate">Due Date:</label><br />
                 <input
                   type="date"
-                  name="DueDate"
+                  name="dueDate"
                   id="DueDate"
                   aria-describedby="date-format"
                   min="2020-01-01"
@@ -85,12 +101,12 @@ export default function TeamMain() {
                 /><br />
               </li>
               <li>
-                <label for="AssignedTo">Assigned To:</label><br />
-                <input type="text" id="AssignedTo" name="AssignedTo" /><br />
+                <label for="assignedTo">Assigned To:</label><br />
+                <input type="text" id="assignedTo" name="assignedTo" /><br />
               </li>
               <li>
-                <label for="Priority">Priority:</label><br />
-                <select id="Priority" name="Priority">
+                <label for="priority">Priority:</label><br />
+                <select id="priority" name="priority">
                   <option label="--Select One--"></option>
                   <option label="Low Priority"></option>
                   <option label="Medium Priority"></option>
@@ -98,8 +114,8 @@ export default function TeamMain() {
                 ><br />
               </li>
               <li>
-                <label for="Status">Status:</label><br />
-                <select id="Status" name="Status">
+                <label for="status">Status:</label><br />
+                <select id="status" name="status">
                   <option label="--Select One--"></option>
                   <option label="Not Started"></option>
                   <option label="Started"></option>
