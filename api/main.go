@@ -125,8 +125,16 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newTeam.ID = result.InsertedID.(primitive.ObjectID)
+
+		update := bson.M{"$push": bson.M{"teams": NameIDPair{newTeam.Name, newTeam.ID}}}
+		_, err = users.UpdateMany(context.TODO(), filter, update)
+		if err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
+		json.NewEncoder(w).Encode(bson.M{"id": newTeam.ID})
 	})
 
 	mux.HandleFunc("GET /teams", func(w http.ResponseWriter, r *http.Request) {
