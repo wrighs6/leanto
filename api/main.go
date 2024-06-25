@@ -83,8 +83,10 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newTask.ID = result.InsertedID.(primitive.ObjectID)
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(bson.M{"id": result.InsertedID})
+		json.NewEncoder(w).Encode(bson.M{"id": newTask.ID})
 	})
 
 	mux.HandleFunc("GET /tasks", func(w http.ResponseWriter, r *http.Request) {
