@@ -83,8 +83,10 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newTask.ID = result.InsertedID.(primitive.ObjectID)
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": newTask.ID})
 	})
 
 	mux.HandleFunc("GET /tasks", func(w http.ResponseWriter, r *http.Request) {
@@ -125,8 +127,16 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newTeam.ID = result.InsertedID.(primitive.ObjectID)
+
+		update := bson.M{"$push": bson.M{"teams": NameIDPair{newTeam.Name, newTeam.ID}}}
+		_, err = users.UpdateMany(context.TODO(), filter, update)
+		if err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": newTeam.ID})
 	})
 
 	mux.HandleFunc("GET /teams", func(w http.ResponseWriter, r *http.Request) {
@@ -167,8 +177,16 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+		newUser.ID = result.InsertedID.(primitive.ObjectID)
+
+		update := bson.M{"$push": bson.M{"members": NameIDPair{newUser.Name, newUser.ID}}}
+		_, err = teams.UpdateMany(context.TODO(), filter, update)
+		if err != nil {
+			panic(err)
+		}
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]primitive.ObjectID{"id": result.InsertedID.(primitive.ObjectID)})
+		json.NewEncoder(w).Encode(bson.M{"id": newUser.ID})
 	})
 
 	mux.HandleFunc("GET /users", func(w http.ResponseWriter, r *http.Request) {
