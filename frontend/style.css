@@ -22,3 +22,125 @@ nav li {
   list-style: none;
   padding: 10px;
 }
+
+main {
+  width: 100%;
+  background-color: #e5e4e2;
+}
+
+form {
+  width: 550px;
+  height: 350px;
+  padding: 5px;
+}
+
+ul {
+  padding: 0px;
+  list-style-type: none;
+}
+
+ul>li {
+  padding: 6px;
+}
+
+.close-button {
+  border: none;
+  float: right;
+  background-color: #fff;
+}
+
+
+.task-row {
+  padding: 4px;
+  display: flex;
+}
+
+.section {
+  padding: 4px;
+  width: 300px;
+  display: inline-block;
+}
+
+.header {
+  font-weight: bold;
+  padding: 4px;
+  width: 300px;
+  display: inline-block;
+}
+
+.border:hover {
+  padding: 20px;
+  border: 1px solid #000000;
+  box-shadow: grey 0px 1px 3px 5px;
+  background-color: #fffa;
+}
+
+.border {
+  padding: 10px;
+  margin: 0.5em 0;
+  background-color: #e5e4e2;
+
+  border: 1px solid #000000;
+  border-radius: 15px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+
+  box-shadow: rgb(225 225 225) 0px 2px 8px 0px;
+}
+
+.status {
+  display: inline-block;
+  box-sizing: border-box;
+  max-width: 300px;
+  padding: 7px;
+  border-radius: 10px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: black;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.add-task {
+  padding: 0px;
+  margin: 0px;
+  display: inline-block;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+}
+
+.options {
+  padding: 0px;
+  margin: 0px;
+  height: 50px;
+  display: inline-block;
+}
+
+.button {
+  padding: 10px;
+  border: 1px solid black;
+  margin: 0.5em 0;
+  background-color: #e5e4e2;
+
+  border: 1px solid #000000;
+  border-radius: 15px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+
+  box-shadow: rgb(225 225 225) 0px 2px 8px 0px;
+}
+
+.button:hover {
+  box-shadow: grey 0px 1px 3px 5px;
+}
+
+.left-button {
+  float: left;
+}
+
+.right-button {
+  float: right;
+}

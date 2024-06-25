@@ -13,6 +13,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+func CORSMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	// Specify BSON options that cause the driver to fallback to "json"
 	// struct tags if "bson" struct tags are missing, marshal nil Go maps as
@@ -200,7 +214,9 @@ func main() {
 		json.NewEncoder(w).Encode(results)
 	})
 
-	if err := http.ListenAndServe(":80", mux); err != nil {
+	handler := CORSMiddleware(mux)
+
+	if err := http.ListenAndServe(":80", handler); err != nil {
 		log.Fatal(err)
 	}
 }

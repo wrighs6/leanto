@@ -1,17 +1,35 @@
-import { html } from 'htm/preact';
+import { html } from "htm/preact";
+import { useState, useEffect } from "preact/hooks";
 
 export default function SideNav() {
+  const [teams, setTeams] = useState([]);
+
+  useEffect(async () => {
+    const response = await fetch(`https://api.${window.location.host}/teams`);
+    const data = await response.json();
+    if (data == null) {
+      return html`
+        <nav>
+          <ul>
+            <li><button>My Tasks</button></li>
+            <li><button>Settings</button></li>
+            <li><button>Logout</button></li>
+          </ul>
+        </nav>
+      `;
+    }
+    setTeams(data);
+  }, []);
+
   return html`
     <nav>
       <ul>
-        <li><a href="#">My Tasks</a></li>
+        <li><button>My Tasks</button></li>
         <li><hr /></li>
-        <li><a href="#">Team 1</a></li>
-        <li><a href="#">Team 2</a></li>
-        <li><a href="#">Team 3</a></li>
+        ${teams.map((team) => html`<li><button>${team.name}</button></li>`)}
         <li><hr /></li>
-        <li><a href="#">Settings</a></li>
-        <li><a href="#">Logout</a></li>
+        <li><button>Settings</button></li>
+        <li><button>Logout</button></li>
       </ul>
     </nav>
   `;
