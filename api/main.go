@@ -188,6 +188,30 @@ func main() {
 		json.NewEncoder(w).Encode(results)
 	})
 
+	mux.HandleFunc("GET /teams/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+		opts := options.FindOne()
+
+		var result Team
+		err = teams.FindOne(context.TODO(), filter, opts).Decode(&result)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			} else {
+				panic(err)
+			}
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
+	})
+
 	mux.HandleFunc("POST /users", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var providedUser PartialUser
@@ -236,6 +260,30 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(results)
+	})
+
+	mux.HandleFunc("GET /users/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+		opts := options.FindOne()
+
+		var result User
+		err = users.FindOne(context.TODO(), filter, opts).Decode(&result)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			} else {
+				panic(err)
+			}
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(result)
 	})
 
 	handler := CORSMiddleware(mux)
