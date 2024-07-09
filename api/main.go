@@ -222,13 +222,13 @@ func main() {
 		json.NewEncoder(w).Encode(results)
 	})
 
+	mux.HandleFunc("DELETE /users", func(w http.ResponseWriter, r *http.Request) {
+		users.DeleteMany(context.TODO(), bson.D{})
+	})
+
 	handler := CORSMiddleware(mux)
 
 	if err := http.ListenAndServe(":80", handler); err != nil {
 		log.Fatal(err)
 	}
-
-	mux.HandleFunc("DELETE /users", func(w http.ResponseWriter, r *http.Request) {
-		users.DeleteMany(context.TODO(), bson.D{})
-	})
 }
