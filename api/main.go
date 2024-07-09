@@ -138,6 +138,26 @@ func main() {
 		json.NewEncoder(w).Encode(result)
 	})
 
+	mux.HandleFunc("DELETE /tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+
+		result, err := tasks.DeleteOne(context.TODO(), filter)
+		if err != nil {
+			panic(err)
+		}
+
+		if result.DeletedCount == 0 {
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+  			w.WriteHeader(http.StatusNoContent)
+		}
+	})
+
 	mux.HandleFunc("POST /teams", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var providedTeam PartialTeam
@@ -212,6 +232,26 @@ func main() {
 		json.NewEncoder(w).Encode(result)
 	})
 
+	mux.HandleFunc("DELETE /teams/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+
+		result, err := teams.DeleteOne(context.TODO(), filter)
+		if err != nil {
+			panic(err)
+		}
+
+		if result.DeletedCount == 0 {
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+  			w.WriteHeader(http.StatusNoContent)
+		}
+	})
+
 	mux.HandleFunc("POST /users", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var providedUser PartialUser
@@ -284,6 +324,26 @@ func main() {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(result)
+	})
+
+	mux.HandleFunc("DELETE /users/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+
+		result, err := users.DeleteOne(context.TODO(), filter)
+		if err != nil {
+			panic(err)
+		}
+
+		if result.DeletedCount == 0 {
+			w.WriteHeader(http.StatusNotFound)
+		} else {
+  			w.WriteHeader(http.StatusNoContent)
+		}
 	})
 
 	handler := CORSMiddleware(mux)
