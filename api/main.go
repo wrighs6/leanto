@@ -306,6 +306,43 @@ func main() {
 		}
 	})
 
+	mux.HandleFunc("PUT /teams/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+
+		decoder := json.NewDecoder(r.Body)
+		var providedTeam PartialTeam
+		err = decoder.Decode(&providedTeam)
+		if err != nil {
+			panic(err)
+		}
+
+		membersFilter := bson.M{"_id": bson.M{"$in": providedTeam.Members}}
+		opts := options.Find().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		cursor, err := users.Find(context.TODO(), membersFilter, opts)
+		if err != nil {
+			panic(err)
+		}
+		var results []NameIDPair
+		if err = cursor.All(context.TODO(), &results); err != nil {
+			panic(err)
+		}
+
+		var newTeam Team
+		newTeam.Name = providedTeam.Name
+		newTeam.Members = results
+
+		_, err = teams.ReplaceOne(context.TODO(), filter, newTeam)
+		if err != nil {
+			panic(err)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	})
+
 	mux.HandleFunc("DELETE /teams", func(w http.ResponseWriter, r *http.Request) {
 		teams.DeleteMany(context.TODO(), bson.D{})
 	})
