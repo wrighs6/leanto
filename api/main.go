@@ -73,7 +73,7 @@ func main() {
 			panic(err)
 		}
 
-		atFilter :=  bson.M{"_id": bson.M{"$in": providedTask.AssignedTo}}
+		atFilter := bson.M{"_id": bson.M{"$in": providedTask.AssignedTo}}
 		atOpts := options.Find().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
 		cursor, err := users.Find(context.TODO(), atFilter, atOpts)
 		if err != nil {
@@ -156,6 +156,10 @@ func main() {
 		} else {
   			w.WriteHeader(http.StatusNoContent)
 		}
+	})
+
+	mux.HandleFunc("DELETE /tasks", func(w http.ResponseWriter, r *http.Request) {
+		tasks.DeleteMany(context.TODO(), bson.D{})
 	})
 
 	mux.HandleFunc("POST /teams", func(w http.ResponseWriter, r *http.Request) {
@@ -252,6 +256,10 @@ func main() {
 		}
 	})
 
+	mux.HandleFunc("DELETE /teams", func(w http.ResponseWriter, r *http.Request) {
+		teams.DeleteMany(context.TODO(), bson.D{})
+	})
+
 	mux.HandleFunc("POST /users", func(w http.ResponseWriter, r *http.Request) {
 		decoder := json.NewDecoder(r.Body)
 		var providedUser PartialUser
@@ -344,6 +352,10 @@ func main() {
 		} else {
   			w.WriteHeader(http.StatusNoContent)
 		}
+	})
+
+	mux.HandleFunc("DELETE /users", func(w http.ResponseWriter, r *http.Request) {
+		users.DeleteMany(context.TODO(), bson.D{})
 	})
 
 	handler := CORSMiddleware(mux)
