@@ -34,8 +34,8 @@ func main() {
 	// arrays.
 	bsonOpts := &options.BSONOptions{
 		UseJSONStructTags: true,
-		NilMapAsEmpty:     true,
-		NilSliceAsEmpty:   true,
+		NilMapAsEmpty: true,
+		NilSliceAsEmpty: true,
 	}
 
 	opts := options.Client().ApplyURI(os.Getenv("DB_CONN")).SetBSONOptions(bsonOpts)
@@ -154,8 +154,58 @@ func main() {
 		if result.DeletedCount == 0 {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
-  			w.WriteHeader(http.StatusNoContent)
+			w.WriteHeader(http.StatusNoContent)
 		}
+	})
+
+	mux.HandleFunc("PUT /tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
+		id, err := primitive.ObjectIDFromHex(r.PathValue("id"))
+		if err != nil {
+			panic(err)
+		}
+
+		filter := bson.M{"_id": id}
+
+		decoder := json.NewDecoder(r.Body)
+		var providedTask PartialTask
+		err = decoder.Decode(&providedTask)
+		if err != nil {
+			panic(err)
+		}
+
+		teamFilter := bson.M{"_id": providedTask.Team}
+		teamOpts := options.FindOne().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		var teamResult NameIDPair
+		err = teams.FindOne(context.TODO(), teamFilter, teamOpts).Decode(&teamResult)
+		if err != nil {
+			panic(err)
+		}
+
+		atFilter := bson.M{"_id": bson.M{"$in": providedTask.AssignedTo}}
+		atOpts := options.Find().SetProjection(bson.D{{"_id", 1}, {"name", 1}})
+		cursor, err := users.Find(context.TODO(), atFilter, atOpts)
+		if err != nil {
+			panic(err)
+		}
+		var atResults []NameIDPair
+		if err = cursor.All(context.TODO(), &atResults); err != nil {
+			panic(err)
+		}
+
+		var newTask Task
+		newTask.Name = providedTask.Name
+		newTask.Description = providedTask.Description
+		newTask.Team = teamResult
+		newTask.AssignedTo = atResults
+		newTask.DueDate = providedTask.DueDate
+		newTask.Priority = providedTask.Priority
+		newTask.Status = providedTask.Status
+
+		_, err = tasks.ReplaceOne(context.TODO(), filter, newTask)
+		if err != nil {
+			panic(err)
+		}
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	mux.HandleFunc("DELETE /tasks", func(w http.ResponseWriter, r *http.Request) {
@@ -252,7 +302,7 @@ func main() {
 		if result.DeletedCount == 0 {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
-  			w.WriteHeader(http.StatusNoContent)
+			w.WriteHeader(http.StatusNoContent)
 		}
 	})
 
@@ -350,7 +400,7 @@ func main() {
 		if result.DeletedCount == 0 {
 			w.WriteHeader(http.StatusNotFound)
 		} else {
-  			w.WriteHeader(http.StatusNoContent)
+			w.WriteHeader(http.StatusNoContent)
 		}
 	})
 
