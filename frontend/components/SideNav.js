@@ -13,7 +13,6 @@ export default function SideNav() {
       return html`
         <nav>
           <ul>
-            <li><button>My Tasks</button></li>
             <li><button>Settings</button></li>
             <li><button>Logout</button></li>
           </ul>
@@ -24,29 +23,26 @@ export default function SideNav() {
   }, []);
 
   // show all of the teams that the user is in
+  // TODO: Create a new endpoint for each of the displays
   return html`
     <nav>
       <ul>
         <li>
-          <script
-            type="text/javascript"
-            type="module"
-            src="./components/TeamMain.js"
-          ></script>
+          <script type="text/javascript"></script>
           <button id="myTasks">My Tasks</button>
           <script type="text/javascript">
             var button = document.getElementById("myTasks");
-
-            button.onclick = function () {
+            function clicked() {
               <iframe
-                src=TeamMain()
                 name="targetframe"
-                allowTransparency="false"
+                allowTransparency="true"
                 scrolling="no"
                 frameborder="0"
               ></iframe>;
-              console.log("hello")
-            };
+              <${TeamMain} />;
+              console.log("hello");
+            }
+            button.addEventListener("click", clicked);
           </script>
         </li>
         <li><hr /></li>
