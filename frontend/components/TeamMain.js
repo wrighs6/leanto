@@ -4,11 +4,11 @@ import { useState, useEffect } from "preact/hooks";
 async function postJSON(data) {
   try {
     const response = await fetch(`https://api.${window.location.host}/tasks`, {
-      method: "POST", 
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: (data),
+      body: data,
     });
 
     const result = await response.json();
@@ -18,7 +18,6 @@ async function postJSON(data) {
   }
 }
 
-
 function handleSubmit(event) {
   event.preventDefault();
 
@@ -26,19 +25,18 @@ function handleSubmit(event) {
 
   var object = {};
   //data.forEach((value, key) => (object[key] = value));
-  for (let [key,value] of data) {
+  for (let [key, value] of data) {
     // convert Date() types properly
-     if (key == "dueDate" && value != "") {
+    if (key == "dueDate" && value != "") {
       object[key] = new Date(value);
     }
     // add field if not empty
     else if (key != "dueDate" && value != "") {
-      // special case for assignedTo as it is a list 
+      // special case for assignedTo as it is a list
       if (key == "assignedTo") {
         object[key] = data.getAll("assignedTo");
-      }
-      else {
-        object[key] = value; 
+      } else {
+        object[key] = value;
       }
     }
   }
@@ -46,7 +44,7 @@ function handleSubmit(event) {
   postJSON(json);
 }
 
-export default function TeamMain() {
+export default function TeamMain(props) {
   const [tasks, setTasks] = useState([]);
 
   useEffect(async () => {
