@@ -449,16 +449,36 @@ func main() {
 
 		filter := bson.M{"_id": id}
 
-		result, err := users.DeleteOne(context.TODO(), filter)
+		var deleted User
+		opts := options.FindOne()
+		err = users.FindOne(context.TODO(), filter, opts).Decode(&deleted)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			} else {
+				panic(err)
+			}
+		}
+
+		_, err = users.DeleteOne(context.TODO(), filter)
 		if err != nil {
 			panic(err)
 		}
 
-		if result.DeletedCount == 0 {
-			w.WriteHeader(http.StatusNotFound)
-		} else {
-			w.WriteHeader(http.StatusNoContent)
+		teamIDs := make([]primitive.ObjectID, len(deleted.Teams))
+		for i, t := range deleted.Teams {
+  			teamIDs[i] = t.ID
 		}
+
+		teamsFilter := bson.M{"_id": bson.M{"$in": teamIDs}}
+		update := bson.M{"$pull": bson.M{"members": NameIDPair{deleted.Name, deleted.ID}}}
+		_, err = teams.UpdateMany(context.TODO(), teamsFilter, update)
+		if err != nil {
+			panic(err)
+		}
+
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	mux.HandleFunc("PUT /users/{id}", func(w http.ResponseWriter, r *http.Request) {
