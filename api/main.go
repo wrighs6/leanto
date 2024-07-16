@@ -209,7 +209,11 @@ func main() {
 	})
 
 	mux.HandleFunc("DELETE /tasks", func(w http.ResponseWriter, r *http.Request) {
-		tasks.DeleteMany(context.TODO(), bson.D{})
+		_, err := tasks.DeleteMany(context.TODO(), bson.D{})
+		if err != nil {
+			panic(err)
+		}
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	mux.HandleFunc("POST /teams", func(w http.ResponseWriter, r *http.Request) {
@@ -530,7 +534,18 @@ func main() {
 	})
 
 	mux.HandleFunc("DELETE /users", func(w http.ResponseWriter, r *http.Request) {
-		users.DeleteMany(context.TODO(), bson.D{})
+		_, err := users.DeleteMany(context.TODO(), bson.D{})
+		if err != nil {
+			panic(err)
+		}
+
+		update := bson.M{"$set": bson.M{"members": []NameIDPair{}}}
+		_, err = teams.UpdateMany(context.TODO(), bson.D{}, update)
+		if err != nil {
+			panic(err)
+		}
+
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	handler := CORSMiddleware(mux)
