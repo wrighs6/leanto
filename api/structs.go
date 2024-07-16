@@ -28,7 +28,7 @@ type Task struct {
 	ID    primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	Name        string   `json:"name"`
 	Description string   `json:"description"`
-	Team NameIDPair `json:"team"`
+	Team NameIDPair `json:"team,omitempty"`
 	AssignedTo  []NameIDPair `json:"assignedTo"`
 	DueDate time.Time `json:"dueDate"`
 	Priority    string   `json:"priority"`

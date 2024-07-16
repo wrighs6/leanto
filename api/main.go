@@ -70,7 +70,9 @@ func main() {
 		var teamResult NameIDPair
 		err = teams.FindOne(context.TODO(), teamFilter, teamOpts).Decode(&teamResult)
 		if err != nil {
-			panic(err)
+			if err != mongo.ErrNoDocuments {
+				panic(err)
+			}
 		}
 
 		atFilter := bson.M{"_id": bson.M{"$in": providedTask.AssignedTo}}
