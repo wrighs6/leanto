@@ -313,7 +313,7 @@ func main() {
 
 		memberIDs := make([]primitive.ObjectID, len(deleted.Members))
 		for i, mem := range deleted.Members {
-  			memberIDs[i] = mem.ID
+			memberIDs[i] = mem.ID
 		}
 
 		membersFilter := bson.M{"_id": bson.M{"$in": memberIDs}}
@@ -364,7 +364,18 @@ func main() {
 	})
 
 	mux.HandleFunc("DELETE /teams", func(w http.ResponseWriter, r *http.Request) {
-		teams.DeleteMany(context.TODO(), bson.D{})
+		_, err := teams.DeleteMany(context.TODO(), bson.D{})
+		if err != nil {
+			panic(err)
+		}
+
+		update := bson.M{"$set": bson.M{"teams": []NameIDPair{}}}
+		_, err = users.UpdateMany(context.TODO(), bson.D{}, update)
+		if err != nil {
+			panic(err)
+		}
+
+		w.WriteHeader(http.StatusNoContent)
 	})
 
 	mux.HandleFunc("POST /users", func(w http.ResponseWriter, r *http.Request) {
@@ -468,7 +479,7 @@ func main() {
 
 		teamIDs := make([]primitive.ObjectID, len(deleted.Teams))
 		for i, t := range deleted.Teams {
-  			teamIDs[i] = t.ID
+			teamIDs[i] = t.ID
 		}
 
 		teamsFilter := bson.M{"_id": bson.M{"$in": teamIDs}}
