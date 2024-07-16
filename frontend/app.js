@@ -1,14 +1,16 @@
-import { render } from 'preact';
-import { html } from 'htm/preact';
-import SideNav from './components/SideNav.js';
-import TeamMain from './components/TeamMain.js';
+import { render } from "preact";
+import { html } from "htm/preact";
+import { useState } from "preact/hooks";
+import SideNav from "./components/SideNav.js";
+import TeamMain from "./components/TeamMain.js";
 
 function App() {
+  const [state, setState] = useState(8189);
 
   return html`
     <div class="app">
-      <${SideNav} />
-      <${TeamMain} />
+      <${SideNav} update=${setState} />
+      <${TeamMain} taskState=${state} />
     </div>
   `;
 }

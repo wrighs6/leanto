@@ -4,11 +4,11 @@ import { useState, useEffect } from "preact/hooks";
 async function postJSON(data) {
   try {
     const response = await fetch(`https://api.${window.location.host}/tasks`, {
-      method: "POST", 
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: (data),
+      body: data,
     });
 
     const result = await response.json();
@@ -18,7 +18,6 @@ async function postJSON(data) {
   }
 }
 
-
 function handleSubmit(event) {
   event.preventDefault();
 
@@ -26,19 +25,18 @@ function handleSubmit(event) {
 
   var object = {};
   //data.forEach((value, key) => (object[key] = value));
-  for (let [key,value] of data) {
+  for (let [key, value] of data) {
     // convert Date() types properly
-     if (key == "dueDate" && value != "") {
+    if (key == "dueDate" && value != "") {
       object[key] = new Date(value);
     }
     // add field if not empty
     else if (key != "dueDate" && value != "") {
-      // special case for assignedTo as it is a list 
+      // special case for assignedTo as it is a list
       if (key == "assignedTo") {
         object[key] = data.getAll("assignedTo");
-      }
-      else {
-        object[key] = value; 
+      } else {
+        object[key] = value;
       }
     }
   }
@@ -46,7 +44,39 @@ function handleSubmit(event) {
   postJSON(json);
 }
 
-export default function TeamMain() {
+function getTasks(props, tasks) {
+  // get all of the tasks from all of the team for the user
+  if (props.taskState == 8189) {
+     const allTasks = tasks.map(
+           (task) => 
+              html`<div class="task-row border">
+                <div class="section">${task.name}</div>
+                <div class="section">${task.assignedTo}</div>
+                <div class="section">${task.dueDate}</div>
+                <div class="section">${task.priority}</div>
+                <div class="status">${task.status}</div>
+              </div>`);
+   return allTasks;
+  }
+  // get all of the tasks for the specified state, i.e. Team 1
+  else {
+     const teamTasks = tasks.map(
+           (task) => {
+             if (task.team.id == props.taskState) {
+              return html`<div class="task-row border">
+                <div class="section">${task.name}</div>
+                <div class="section">${task.assignedTo}</div>
+                <div class="section">${task.dueDate}</div>
+                <div class="section">${task.priority}</div>
+                <div class="status">${task.status}</div>
+              </div>`}});
+   return teamTasks;
+
+  }
+}
+
+
+export default function TeamMain(props) {
   const [tasks, setTasks] = useState([]);
 
   useEffect(async () => {
@@ -57,6 +87,9 @@ export default function TeamMain() {
     const form = document.querySelector("form");
     form.addEventListener("submit", handleSubmit);
   }, []);
+
+  
+
 
   return html`
     <main>
@@ -136,16 +169,9 @@ export default function TeamMain() {
         <div class="header">Task Priority</div>
         <div class="header">Task Status</div>
       </div>
-      ${tasks.map(
-        (task) =>
-          html`<div class="task-row border">
-            <div class="section">${task.name}</div>
-            <div class="section">${task.assignedTo}</div>
-            <div class="section">${task.dueDate}</div>
-            <div class="section">${task.priority}</div>
-            <div class="status">${task.status}</div>
-          </div>`,
-      )}
+      <div id="tasksContainer">
+        ${getTasks(props, tasks)}
+      </div>
     </main>
   `;
 }
