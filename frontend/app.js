@@ -5,7 +5,7 @@ import SideNav from "./components/SideNav.js";
 import TeamMain from "./components/TeamMain.js";
 
 function App() {
-  const [state, setState] = useState("My Tasks");
+  const [state, setState] = useState(8189);
 
   return html`
     <div class="app">

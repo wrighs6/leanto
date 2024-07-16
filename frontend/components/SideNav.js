@@ -25,7 +25,7 @@ export default function SideNav(props) {
     <nav>
       <ul>
         <li>
-          <button id="myTasks" onClick=${() => props.update("My Tasks")}>
+          <button id="myTasks" onClick=${() => props.update(8189)}>
             My Tasks
           </button>
         </li>
@@ -33,7 +33,7 @@ export default function SideNav(props) {
         ${teams.map(
           (team) =>
             html`<li>
-              <button onClick=${() => props.update(team.name)}>
+              <button onClick=${() => props.update(team.id)}>
                 ${team.name}
               </button>
             </li>`,

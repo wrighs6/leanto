@@ -46,7 +46,7 @@ function handleSubmit(event) {
 
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
-  if (props.taskState == "My Tasks") {
+  if (props.taskState == 8189) {
      const allTasks = tasks.map(
            (task) => 
               html`<div class="task-row border">
@@ -62,7 +62,7 @@ function getTasks(props, tasks) {
   else {
      const teamTasks = tasks.map(
            (task) => {
-             if (task.team.name == props.taskState) {
+             if (task.team.id == props.taskState) {
               return html`<div class="task-row border">
                 <div class="section">${task.name}</div>
                 <div class="section">${task.assignedTo}</div>
