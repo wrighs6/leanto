@@ -44,6 +44,38 @@ function handleSubmit(event) {
   postJSON(json);
 }
 
+function getTasks(props, tasks) {
+  // get all of the tasks from all of the team for the user
+  if (props.taskState == "My Tasks") {
+     const allTasks = tasks.map(
+           (task) => 
+              html`<div class="task-row border">
+                <div class="section">${task.name}</div>
+                <div class="section">${task.assignedTo}</div>
+                <div class="section">${task.dueDate}</div>
+                <div class="section">${task.priority}</div>
+                <div class="status">${task.status}</div>
+              </div>`);
+   return allTasks;
+  }
+  // get all of the tasks for the specified state, i.e. Team 1
+  else {
+     const teamTasks = tasks.map(
+           (task) => {
+             if (task.team.name == props.taskState) {
+              return html`<div class="task-row border">
+                <div class="section">${task.name}</div>
+                <div class="section">${task.assignedTo}</div>
+                <div class="section">${task.dueDate}</div>
+                <div class="section">${task.priority}</div>
+                <div class="status">${task.status}</div>
+              </div>`}});
+   return teamTasks;
+
+  }
+}
+
+
 export default function TeamMain(props) {
   const [tasks, setTasks] = useState([]);
 
@@ -138,18 +170,8 @@ export default function TeamMain(props) {
         <div class="header">Task Status</div>
       </div>
       <div id="tasksContainer">
+        ${getTasks(props, tasks)}
       </div>
-        ${props.taskState == "My Tasks" &&
-            tasks.map(
-            task =>
-              html`<div class="task-row border">
-                <div class="section">${task.name}</div>
-                <div class="section">${task.assignedTo}</div>
-                <div class="section">${task.dueDate}</div>
-                <div class="section">${task.priority}</div>
-                <div class="status">${task.status}</div>
-              </div>`,
-          )}
     </main>
   `;
 }
