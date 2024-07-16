@@ -56,6 +56,9 @@ export default function TeamMain(props) {
     form.addEventListener("submit", handleSubmit);
   }, []);
 
+  
+
+
   return html`
     <main>
       <div class="options">
@@ -134,16 +137,19 @@ export default function TeamMain(props) {
         <div class="header">Task Priority</div>
         <div class="header">Task Status</div>
       </div>
-      ${tasks.map(
-        (task) =>
-          html`<div class="task-row border">
-            <div class="section">${task.name}</div>
-            <div class="section">${task.assignedTo}</div>
-            <div class="section">${task.dueDate}</div>
-            <div class="section">${task.priority}</div>
-            <div class="status">${task.status}</div>
-          </div>`,
-      )}
+      <div id="tasksContainer">
+      </div>
+        ${props.taskState == "My Tasks" &&
+            tasks.map(
+            task =>
+              html`<div class="task-row border">
+                <div class="section">${task.name}</div>
+                <div class="section">${task.assignedTo}</div>
+                <div class="section">${task.dueDate}</div>
+                <div class="section">${task.priority}</div>
+                <div class="status">${task.status}</div>
+              </div>`,
+          )}
     </main>
   `;
 }
