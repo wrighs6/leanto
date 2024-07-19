@@ -153,7 +153,7 @@ export default function TeamMain(props) {
                 ><br />
               </li>
               <li>
-                <input type="submit" value="Add" popovertargetaction="hide" />
+                <input type="submit" value="Add task" popovertargetaction="hide" />
               </li>
             </ul>
           </form>

@@ -10,7 +10,6 @@ async function postJSON(data) {
       },
       body: data,
     });
-
     const result = await response.json();
     console.log("Success:", result);
   } catch (error) {
@@ -27,6 +26,7 @@ function handleSubmit(event) {
   for (let [key, value] of data) {
     // members are arrays
     if (key == "members" && value != "") {
+      console.log(value);
       object[key] = data.getAll("members");
     }
     // name is a key-value pair
@@ -113,19 +113,30 @@ export default function SideNav(props) {
                   <li class="add-team">
                     <label for="members">Members:</label
                     ><br class="extra-margin" />
-                    <select name="members" id="members">
-                      <option value="volvo">Volvo</option>
-                      <option value="saab">Saab</option>
-                      <option value="mercedes">Mercedes</option>
-                      <option value="audi">Audi</option>
-                    </select>
+                    <div id="members" class="dropdown-check-list" tabindex="100">
+                      <span class="anchor">Select Fruits</span>
+                      <ul class="items">
+                        <li><input type="checkbox" />Apple</li>
+                        <li><input type="checkbox" />Orange</li>
+                        <li><input type="checkbox" />Grapes</li>
+                        <li><input type="checkbox" />Berry</li>
+                        <li><input type="checkbox" />Mango</li>
+                        <li><input type="checkbox" />Banana</li>
+                        <li><input type="checkbox" />Tomato</li>
+                      </ul>
+                    </div>
+                    <script>
+                      var checkList = document.getElementById("members");
+                      checkList.getElementsByClassName("anchor")[0].onclick =
+                        function (evt) {
+                          if (checkList.classList.contains("visible"))
+                            checkList.classList.remove("visible");
+                          else checkList.classList.add("visible");
+                        };
+                    </script>
                   </li>
                   <li>
-                    <input
-                      type="submit"
-                      value="Add"
-                      popovertargetaction="hide"
-                    />
+                    <input type="submit" value="Add team" popovertargetaction="hide" />
                   </li>
                 </ul>
               </form>
