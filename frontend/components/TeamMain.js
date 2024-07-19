@@ -83,7 +83,6 @@ export default function TeamMain(props) {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
     setTasks(data);
-    console.log(data);
     const form = document.querySelector("form");
     form.addEventListener("submit", handleSubmit);
   }, []);
@@ -115,15 +114,15 @@ export default function TeamMain(props) {
           <form method="post">
             <ul>
               <li>
-                <label for="name">Name:</label><br />
+                <label for="name">Name:</label><br class="extra-margin"/>
                 <input type="text" id="name" name="name" /><br />
               </li>
               <li>
-                <label for="description">Description:</label><br />
+                <label for="description">Description:</label><br class="extra-margin"/>
                 <textarea id="description" name="description"></textarea><br />
               </li>
               <li>
-                <label for="dueDate">Due Date:</label><br />
+                <label for="dueDate">Due Date:</label><br class="extra-margin"/>
                 <input
                   type="datetime-local"
                   name="dueDate"
@@ -132,11 +131,11 @@ export default function TeamMain(props) {
                 /><br />
               </li>
               <li>
-                <label for="assignedTo">Assigned To:</label><br />
+                <label for="assignedTo">Assigned To:</label><br class="extra-margin"/>
                 <input type="text" id="assignedTo" name="assignedTo" /><br />
               </li>
               <li>
-                <label for="priority">Priority:</label><br />
+                <label for="priority">Priority:</label><br class="extra-margin"/>
                 <select id="priority" name="priority">
                   <option label="--Select One--"></option>
                   <option label="Low Priority"></option>
@@ -145,7 +144,7 @@ export default function TeamMain(props) {
                 ><br />
               </li>
               <li>
-                <label for="status">Status:</label><br />
+                <label for="status">Status:</label><br class="extra-margin"/>
                 <select id="status" name="status">
                   <option label="--Select One--"></option>
                   <option label="Not Started"></option>

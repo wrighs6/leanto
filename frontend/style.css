@@ -102,6 +102,10 @@ ul>li {
   vertical-align: middle;
 }
 
+.extra-margin {
+  margin: 3px;
+}
+
 .add-team {
   padding: 5px;
   margin: 5px;
