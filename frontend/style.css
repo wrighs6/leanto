@@ -102,6 +102,11 @@ ul>li {
   vertical-align: middle;
 }
 
+.add-team {
+  padding: 5px;
+  margin: 5px;
+}
+
 .add-task {
   padding: 0px;
   margin: 0px;

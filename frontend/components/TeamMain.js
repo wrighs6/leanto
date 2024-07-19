@@ -98,14 +98,14 @@ export default function TeamMain(props) {
         <button class="left-button button">Filter</button>
       </div>
       <div class="add-task">
-        <button popovertarget="my-popover" class="right-button button">
+        <button popovertarget="add-task" class="right-button button">
           Add Task
         </button>
 
-        <div id="my-popover" popover="manual">
+        <div id="add-task" popover="manual">
           <button
             class="close-button"
-            popovertarget="my-popover"
+            popovertarget="add-task"
             popovertargetaction="hide"
             type="button"
             aria-label="Close alert"
@@ -125,12 +125,10 @@ export default function TeamMain(props) {
               <li>
                 <label for="dueDate">Due Date:</label><br />
                 <input
-                  type="date"
+                  type="datetime-local"
                   name="dueDate"
                   id="DueDate"
                   aria-describedby="date-format"
-                  min="2020-01-01"
-                  max="2030-01-01"
                 /><br />
               </li>
               <li>
