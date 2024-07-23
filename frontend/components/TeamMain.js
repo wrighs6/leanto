@@ -18,33 +18,6 @@ async function postJSON(data) {
   }
 }
 
-function handleSubmit(event) {
-  event.preventDefault();
-
-  const data = new FormData(event.target);
-
-  var object = {};
-  //data.forEach((value, key) => (object[key] = value));
-  for (let [key, value] of data) {
-    // convert Date() types properly
-    if (key == "dueDate" && value != "") {
-      object[key] = new Date(value);
-    }
-    // add field if not empty
-    else if (key != "dueDate" && value != "") {
-      // special case for assignedTo as it is a list
-      if (key == "assignedTo") {
-        object[key] = data.getAll("assignedTo");
-      } else {
-        object[key] = value;
-      }
-    }
-  }
-  var json = JSON.stringify(object);
-  postJSON(json);
-  document.getElementById("my-popover").hidePopover();
-}
-
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
   if (props.taskState == 8189) {
@@ -79,16 +52,44 @@ function getTasks(props, tasks) {
 
 export default function TeamMain(props) {
   const [tasks, setTasks] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(async () => {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
+    console.log(data);
     setTasks(data);
-    const form = document.querySelector("form");
-    form.addEventListener("submit", handleSubmit);
-  }, []);
+  }, [refresh]);
 
   
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const data = new FormData(event.target);
+
+    var object = {};
+    //data.forEach((value, key) => (object[key] = value));
+    for (let [key, value] of data) {
+      // convert Date() types properly
+      if (key == "dueDate" && value != "") {
+        object[key] = new Date(value);
+      }
+      // add field if not empty
+      else if (key != "dueDate" && value != "") {
+        // special case for assignedTo as it is a list
+        if (key == "assignedTo") {
+          object[key] = data.getAll("assignedTo");
+        } else {
+          object[key] = value;
+        }
+      }
+    }
+    var json = JSON.stringify(object);
+    postJSON(json);
+    document.getElementById("my-popover").hidePopover();
+    setTimeout(() => setRefresh(!refresh), 1000);
+  };
+
 
 
   return html`
@@ -112,7 +113,7 @@ export default function TeamMain(props) {
           >
             <span aria-hidden="true">❌</span>
           </button>
-          <form method="post">
+          <form onSubmit=${handleSubmit}>
             <ul>
               <li>
                 <label for="name">Name:</label><br />
