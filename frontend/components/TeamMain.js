@@ -42,6 +42,7 @@ function handleSubmit(event) {
   }
   var json = JSON.stringify(object);
   postJSON(json);
+  document.getElementById("my-popover").hidePopover();
 }
 
 function getTasks(props, tasks) {
