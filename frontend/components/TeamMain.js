@@ -17,77 +17,76 @@ async function taskPostJSON(data) {
   }
 }
 
-function taskHandleSubmit(event) {
-  event.preventDefault();
-
-  const data = new FormData(event.target);
-
-  var object = {};
-  //data.forEach((value, key) => (object[key] = value));
-  for (let [key, value] of data) {
-    // convert Date() types properly
-    if (key == "dueDate" && value != "") {
-      object[key] = new Date(value);
-    }
-    // add field if not empty
-    else if (key != "dueDate" && value != "") {
-      // special case for assignedTo as it is a list
-      if (key == "assignedTo") {
-        object[key] = data.getAll("assignedTo");
-      } else {
-        object[key] = value;
-      }
-    }
-  }
-  var json = JSON.stringify(object);
-  taskPostJSON(json);
-}
-
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
-  if (props.taskState == 8189) {
-     const allTasks = tasks.map(
-           (task) => 
-              html`<div class="task-row border">
-                <div class="section">${task.name}</div>
-                <div class="section">${task.assignedTo}</div>
-                <div class="section">${task.dueDate}</div>
-                <div class="section">${task.priority}</div>
-                <div class="status">${task.status}</div>
-              </div>`);
-   return allTasks;
+  if (props.taskState == "") {
+    const allTasks = tasks.map(
+      (task) =>
+        html`<div class="task-row border">
+          <div class="section">${task.name}</div>
+          <div class="section">${task.assignedTo}</div>
+          <div class="section">${task.dueDate}</div>
+          <div class="section">${task.priority}</div>
+          <div class="status">${task.status}</div>
+        </div>`,
+    );
+    return allTasks;
   }
   // get all of the tasks for the specified state, i.e. Team 1
   else {
-     const teamTasks = tasks.map(
-           (task) => {
-             if (task.team.id == props.taskState) {
-              return html`<div class="task-row border">
-                <div class="section">${task.name}</div>
-                <div class="section">${task.assignedTo}</div>
-                <div class="section">${task.dueDate}</div>
-                <div class="section">${task.priority}</div>
-                <div class="status">${task.status}</div>
-              </div>`}});
-   return teamTasks;
-
+    const teamTasks = tasks.map((task) => {
+      if (task.team.id == props.taskState) {
+        return html`<div class="task-row border">
+          <div class="section">${task.name}</div>
+          <div class="section">${task.assignedTo}</div>
+          <div class="section">${task.dueDate}</div>
+          <div class="section">${task.priority}</div>
+          <div class="status">${task.status}</div>
+        </div>`;
+      }
+    });
+    return teamTasks;
   }
 }
 
-
 export default function TeamMain(props) {
   const [tasks, setTasks] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(async () => {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
-    const form = document.querySelector("form");
-    form.addEventListener("submit", taskHandleSubmit);
     setTasks(data);
-  }, []);
+  }, [refresh]);
 
-  
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
+    const data = new FormData(event.target);
+
+    var object = {};
+    //data.forEach((value, key) => (object[key] = value));
+    for (let [key, value] of data) {
+      // convert Date() types properly
+      if (key == "dueDate" && value != "") {
+        object[key] = new Date(value);
+      }
+      // add field if not empty
+      else if (key != "dueDate" && value != "") {
+        // special case for assignedTo as it is a list
+        if (key == "assignedTo") {
+          object[key] = data.getAll("assignedTo");
+        } else {
+          object[key] = value;
+        }
+      }
+    }
+    object.team = props.taskState;
+    var json = JSON.stringify(object);
+    taskPostJSON(json);
+    document.getElementById("add-task").hidePopover();
+    setTimeout(() => setRefresh(!refresh), 1000);
+  };
 
   return html`
     <main>
@@ -110,18 +109,20 @@ export default function TeamMain(props) {
           >
             <span aria-hidden="true">❌</span>
           </button>
-          <form method="post">
+          <form onSubmit=${handleSubmit}>
             <ul>
               <li>
-                <label for="name">Name:</label><br class="extra-margin"/>
+                <label for="name">Name:</label><br class="extra-margin" />
                 <input type="text" id="name" name="name" /><br />
               </li>
               <li>
-                <label for="description">Description:</label><br class="extra-margin"/>
+                <label for="description">Description:</label
+                ><br class="extra-margin" />
                 <textarea id="description" name="description"></textarea><br />
               </li>
               <li>
-                <label for="dueDate">Due Date:</label><br class="extra-margin"/>
+                <label for="dueDate">Due Date:</label
+                ><br class="extra-margin" />
                 <input
                   type="datetime-local"
                   name="dueDate"
@@ -130,29 +131,35 @@ export default function TeamMain(props) {
                 /><br />
               </li>
               <li>
-                <label for="assignedTo">Assigned To:</label><br class="extra-margin"/>
+                <label for="assignedTo">Assigned To:</label
+                ><br class="extra-margin" />
                 <input type="text" id="assignedTo" name="assignedTo" /><br />
               </li>
               <li>
-                <label for="priority">Priority:</label><br class="extra-margin"/>
+                <label for="priority">Priority:</label
+                ><br class="extra-margin" />
                 <select id="priority" name="priority">
                   <option label="--Select One--"></option>
-                  <option label="Low Priority"></option>
-                  <option label="Medium Priority"></option>
-                  <option label="High Priority"></option></select
+                  <option>Low Priority</option>
+                  <option>Medium Priority</option>
+                  <option>High Priority</option></select
                 ><br />
               </li>
               <li>
-                <label for="status">Status:</label><br class="extra-margin"/>
+                <label for="status">Status:</label><br class="extra-margin" />
                 <select id="status" name="status">
                   <option label="--Select One--"></option>
-                  <option label="Not Started"></option>
-                  <option label="Started"></option>
-                  <option label="Done"></option></select
+                  <option>Not Started</option>
+                  <option>Started</option>
+                  <option>Done</option></select
                 ><br />
               </li>
               <li>
-                <input type="submit" value="Add task" popovertargetaction="hide" />
+                <input
+                  type="submit"
+                  value="Add task"
+                  popovertargetaction="hide"
+                />
               </li>
             </ul>
           </form>
@@ -165,9 +172,7 @@ export default function TeamMain(props) {
         <div class="header">Task Priority</div>
         <div class="header">Task Status</div>
       </div>
-      <div id="tasksContainer">
-        ${getTasks(props, tasks)}
-      </div>
+      <div id="tasksContainer">${getTasks(props, tasks)}</div>
     </main>
   `;
 }

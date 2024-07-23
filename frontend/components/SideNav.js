@@ -76,7 +76,7 @@ export default function SideNav(props) {
     <nav>
       <ul>
         <li>
-          <button id="myTasks" onClick=${() => props.update(8189)}>
+          <button id="myTasks" onClick=${() => props.update("")}>
             My Tasks
           </button>
         </li>
