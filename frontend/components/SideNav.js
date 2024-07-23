@@ -1,7 +1,7 @@
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
-async function postJSON(data) {
+async function teamPostJSON(data) {
   try {
     const response = await fetch(`https://api.${window.location.host}/teams`, {
       method: "POST",
@@ -17,7 +17,7 @@ async function postJSON(data) {
   }
 }
 
-function handleSubmit(event) {
+function teamHandleSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
@@ -35,7 +35,7 @@ function handleSubmit(event) {
     }
   }
   var json = JSON.stringify(object);
-  postJSON(json);
+  teamPostJSON(json);
 }
 
 export default function SideNav(props) {
@@ -66,10 +66,10 @@ export default function SideNav(props) {
         </nav>
       `;
     }
+    const form = document.querySelector("form");
+    form.addEventListener("submit", teamHandleSubmit);
     setTeams(teams);
     setUsers(users);
-    const form = document.querySelector("form");
-    form.addEventListener("submit", handleSubmit);
   }, []);
 
   return html`
@@ -113,7 +113,11 @@ export default function SideNav(props) {
                   <li class="add-team">
                     <label for="members">Members:</label
                     ><br class="extra-margin" />
-                    <div id="members" class="dropdown-check-list" tabindex="100">
+                    <div
+                      id="members"
+                      class="dropdown-check-list"
+                      tabindex="100"
+                    >
                       <span class="anchor">Select Fruits</span>
                       <ul class="items">
                         <li><input type="checkbox" />Apple</li>
@@ -136,7 +140,11 @@ export default function SideNav(props) {
                     </script>
                   </li>
                   <li>
-                    <input type="submit" value="Add team" popovertargetaction="hide" />
+                    <input
+                      type="submit"
+                      value="Add team"
+                      popovertargetaction="hide"
+                    />
                   </li>
                 </ul>
               </form>

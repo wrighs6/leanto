@@ -1,7 +1,7 @@
 import { html } from "htm/preact";
 import { useState, useEffect } from "preact/hooks";
 
-async function postJSON(data) {
+async function taskPostJSON(data) {
   try {
     const response = await fetch(`https://api.${window.location.host}/tasks`, {
       method: "POST",
@@ -10,7 +10,6 @@ async function postJSON(data) {
       },
       body: data,
     });
-
     const result = await response.json();
     console.log("Success:", result);
   } catch (error) {
@@ -18,7 +17,7 @@ async function postJSON(data) {
   }
 }
 
-function handleSubmit(event) {
+function taskHandleSubmit(event) {
   event.preventDefault();
 
   const data = new FormData(event.target);
@@ -41,7 +40,7 @@ function handleSubmit(event) {
     }
   }
   var json = JSON.stringify(object);
-  postJSON(json);
+  taskPostJSON(json);
 }
 
 function getTasks(props, tasks) {
@@ -82,9 +81,9 @@ export default function TeamMain(props) {
   useEffect(async () => {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
-    setTasks(data);
     const form = document.querySelector("form");
-    form.addEventListener("submit", handleSubmit);
+    form.addEventListener("submit", taskHandleSubmit);
+    setTasks(data);
   }, []);
 
   
