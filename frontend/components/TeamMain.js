@@ -20,7 +20,7 @@ async function postJSON(data) {
 
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
-  if (props.taskState == 8189) {
+  if (props.taskState == "") {
      const allTasks = tasks.map(
            (task) => 
               html`<div class="task-row border">
@@ -57,7 +57,6 @@ export default function TeamMain(props) {
   useEffect(async () => {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
-    console.log(data);
     setTasks(data);
   }, [refresh]);
 
@@ -84,6 +83,7 @@ export default function TeamMain(props) {
         }
       }
     }
+    object.team = props.taskState;
     var json = JSON.stringify(object);
     postJSON(json);
     document.getElementById("my-popover").hidePopover();
