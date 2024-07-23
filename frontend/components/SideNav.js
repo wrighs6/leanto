@@ -17,30 +17,10 @@ async function teamPostJSON(data) {
   }
 }
 
-function teamHandleSubmit(event) {
-  event.preventDefault();
-
-  const data = new FormData(event.target);
-
-  var object = {};
-  for (let [key, value] of data) {
-    // members are arrays
-    if (key == "members" && value != "") {
-      console.log(value);
-      object[key] = data.getAll("members");
-    }
-    // name is a key-value pair
-    else {
-      object[key] = value;
-    }
-  }
-  var json = JSON.stringify(object);
-  teamPostJSON(json);
-}
-
 export default function SideNav(props) {
   const [teams, setTeams] = useState([]);
   const [users, setUsers] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(async () => {
     // fetch the teams
@@ -66,11 +46,32 @@ export default function SideNav(props) {
         </nav>
       `;
     }
-    const form = document.querySelector("form");
-    form.addEventListener("submit", teamHandleSubmit);
     setTeams(teams);
     setUsers(users);
-  }, []);
+  }, [refresh]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const data = new FormData(event.target);
+
+    var object = {};
+    for (let [key, value] of data) {
+      // members are arrays
+      if (key == "members" && value != "") {
+        console.log(value);
+        object[key] = data.getAll("members");
+      }
+      // name is a key-value pair
+      else {
+        object[key] = value;
+      }
+    }
+    var json = JSON.stringify(object);
+    teamPostJSON(json);
+    document.getElementById("add-team").hidePopover();
+    setTimeout(() => setRefresh(!refresh), 1000);
+  };
 
   return html`
     <nav>
@@ -104,7 +105,7 @@ export default function SideNav(props) {
               >
                 <span aria-hidden="true">❌</span>
               </button>
-              <form method="post">
+              <form onSubmit=${handleSubmit}>
                 <ul class="add-team">
                   <li class="add-team">
                     <label for="name">Name:</label><br class="extra-margin" />
