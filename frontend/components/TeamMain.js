@@ -83,7 +83,6 @@ export default function TeamMain(props) {
     const response = await fetch(`https://api.${window.location.host}/tasks`);
     const data = await response.json();
     setTasks(data);
-    console.log(data);
     const form = document.querySelector("form");
     form.addEventListener("submit", handleSubmit);
   }, []);
@@ -141,18 +140,18 @@ export default function TeamMain(props) {
                 <label for="priority">Priority:</label><br />
                 <select id="priority" name="priority">
                   <option label="--Select One--"></option>
-                  <option label="Low Priority"></option>
-                  <option label="Medium Priority"></option>
-                  <option label="High Priority"></option></select
+                  <option>Low Priority</option>
+                  <option>Medium Priority</option>
+                  <option>High Priority</option></select
                 ><br />
               </li>
               <li>
                 <label for="status">Status:</label><br />
                 <select id="status" name="status">
                   <option label="--Select One--"></option>
-                  <option label="Not Started"></option>
-                  <option label="Started"></option>
-                  <option label="Done"></option></select
+                  <option>Not Started</option>
+                  <option>Started</option>
+                  <option>Done</option></select
                 ><br />
               </li>
               <li>
