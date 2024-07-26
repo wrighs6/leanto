@@ -161,9 +161,23 @@ ul>li {
   display: block;
 }
 
-
 .extra-margin {
   margin: 3px;
+}
+
+.show-description {
+  margin: 3px;
+  padding: 3px;
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+
 }
 
 .add-team {
