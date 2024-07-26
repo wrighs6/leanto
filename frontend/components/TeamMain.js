@@ -17,57 +17,62 @@ async function taskPostJSON(data) {
   }
 }
 
-function my() {
-  document.getElementById("openDescription").style.display = "block";
-}
-
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
   if (props.taskState == "") {
     var allTasks = tasks.map(
       (task) =>
-        html`<div class="task-row border" onclick=${my}>
-          <div class="section">${task.name}</div>
-          <div class="section">${task.assignedTo}</div>
-          <div class="section">${task.dueDate}</div>
-          <div class="section">${task.priority}</div>
-          <div class="status">${task.status}</div>
-          <div id="openDescription" class="popup">
-            <div class="section">hello</div>
-          </div>
-        </div>`,
-    );
-    if (task != undefined) {
-      console.log("hello");
-      allTasks.push(html`
-        <div class="show-description">
-          <div id="show-description" popover="manual">
+        html`<button
+          class="border button-unstyled"
+          popovertarget="show-description"
+        >
+          <span class="section">${task.name}</span>
+          <span class="section">${task.assignedTo}</span>
+          <span class="section">${task.dueDate}</span>
+          <span class="section">${task.priority}</span>
+          <span class="status">${task.status}</span>
+          <span id="show-description" popover="manual">
             <button
               class="close-button"
-              popovertarget="add-task"
+              popovertarget="show-description"
               popovertargetaction="hide"
               type="button"
               aria-label="Close alert"
             >
               <span aria-hidden="true">❌</span>
             </button>
-          </div>
-        </div>
-      `);
-    }
+            <div class="show-description">${task.description}</div>
+          </span>
+        </button>`,
+    );
     return allTasks;
   }
   // get all of the tasks for the specified state, i.e. Team 1
   else {
     const teamTasks = tasks.map((task) => {
       if (task.team.id == props.taskState) {
-        return html`<div class="task-row border">
+        return html`<button
+          class="task-row border"
+          popovertarget="show-description"
+        >
           <div class="section">${task.name}</div>
           <div class="section">${task.assignedTo}</div>
           <div class="section">${task.dueDate}</div>
           <div class="section">${task.priority}</div>
           <div class="status">${task.status}</div>
-        </div>`;
+          <div id="show-description" popover="manual">
+            <button
+              class="close-button"
+              popovertarget="show-description"
+              popovertargetaction="hide"
+              type="button"
+              aria-label="Close alert"
+            >
+              <span aria-hidden="true">❌</span>
+            </button>
+            <div class="show-description">${task.description}</div>
+          </div>
+        </button>`;
       }
     });
     return teamTasks;

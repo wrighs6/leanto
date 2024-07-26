@@ -61,6 +61,13 @@ ul>li {
   display: inline-block;
 }
 
+.button-unstyled {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+
 .header {
   font-weight: bold;
   padding: 4px;
@@ -76,7 +83,7 @@ ul>li {
 }
 
 .border {
-  padding: 10px;
+  padding: 5px;
   margin: 0.5em 0;
   background-color: #e5e4e2;
 
@@ -166,19 +173,11 @@ ul>li {
 }
 
 .show-description {
-  margin: 3px;
-  padding: 3px;
+  margin: 20px;
+  padding: 50px;
+  width: 300px;
 }
 
-.popup {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  right: 15px;
-  border: 3px solid #f1f1f1;
-  z-index: 9;
-
-}
 
 .add-team {
   padding: 5px;
