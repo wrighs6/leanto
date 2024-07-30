@@ -6,6 +6,7 @@ export default function SideNav(props) {
   const [teams, setTeams] = useState([]);
   const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
 
   useEffect(async () => {
     // fetch the teams
@@ -32,7 +33,7 @@ export default function SideNav(props) {
   }, [refresh]);
 
   return html`
-    <${TeamForm} refresh=${() => setRefresh(!refresh)} />
+    <${TeamForm} open=${formOpen} close=${() => setFormOpen(false)} refresh=${() => setRefresh(!refresh)} />
     <nav>
       <ul>
         <li>
@@ -52,7 +53,7 @@ export default function SideNav(props) {
         <li><hr /></li>
         <li>
           <div>
-            <button popovertarget="add-team">Add Team</button>
+            <button onClick=${() => setFormOpen(true)}>Add Team</button>
           </div>
         </li>
         <li><button>Settings</button></li>
