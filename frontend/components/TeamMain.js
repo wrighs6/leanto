@@ -22,57 +22,47 @@ function getTasks(props, tasks) {
   if (props.taskState == "") {
     var allTasks = tasks.map(
       (task) =>
-        html`<button
-          class="border button-unstyled"
-          popovertarget="show-description"
-        >
-          <span class="section">${task.name}</span>
-          <span class="section">${task.assignedTo}</span>
-          <span class="section">${task.dueDate}</span>
-          <span class="section">${task.priority}</span>
-          <span class="status">${task.status}</span>
-          <span id="show-description" popover="manual">
-            <button
-              class="close-button"
-              popovertarget="show-description"
-              popovertargetaction="hide"
-              type="button"
-              aria-label="Close alert"
-            >
-              <span aria-hidden="true">❌</span>
-            </button>
-            <div class="show-description">${task.description}</div>
-          </span>
-        </button>`,
+        html`<div class="task-row border" id="task">
+          <div class="section">${task.name}</div>
+          <div class="section">${task.assignedTo}</div>
+          <div class="section">${task.dueDate}</div>
+          <div class="section">${task.priority}</div>
+          <div class="status">${task.status}</div>
+          <div id="mypopover" popover>
+            <div class="section">${task.description}</div>
+          </div>
+          <script>
+            const popover = document.getElementById("mypopover");
+
+            if (!HTMLElement.prototype.hasOwnProperty("popover")) {
+              popover.innerText = "";
+            }
+
+            const task = document.getElementById("task");
+
+            if (HTMLElement.prototype.hasOwnProperty("popover")) {
+              task.addEventListener("click", (event) => {
+                popover.togglePopover();
+                console.log("he");
+              });
+            }
+          </script>
+        </div> `,
     );
+
     return allTasks;
   }
   // get all of the tasks for the specified state, i.e. Team 1
   else {
     const teamTasks = tasks.map((task) => {
       if (task.team.id == props.taskState) {
-        return html`<button
-          class="task-row border"
-          popovertarget="show-description"
-        >
+        return html`<div class="task-row border">
           <div class="section">${task.name}</div>
           <div class="section">${task.assignedTo}</div>
           <div class="section">${task.dueDate}</div>
           <div class="section">${task.priority}</div>
           <div class="status">${task.status}</div>
-          <div id="show-description" popover="manual">
-            <button
-              class="close-button"
-              popovertarget="show-description"
-              popovertargetaction="hide"
-              type="button"
-              aria-label="Close alert"
-            >
-              <span aria-hidden="true">❌</span>
-            </button>
-            <div class="show-description">${task.description}</div>
-          </div>
-        </button>`;
+        </div>`;
       }
     });
     return teamTasks;
