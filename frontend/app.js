@@ -5,12 +5,12 @@ import SideNav from "./components/SideNav.js";
 import TeamMain from "./components/TeamMain.js";
 
 function App() {
-  const [state, setState] = useState("");
+  const [selected, setSelected] = useState("");
 
   return html`
     <div class="app">
-      <${SideNav} update=${setState} />
-      <${TeamMain} taskState=${state} />
+      <${SideNav} update=${setSelected} />
+      <${TeamMain} selected=${selected} />
     </div>
   `;
 }
