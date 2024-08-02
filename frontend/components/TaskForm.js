@@ -1,7 +1,7 @@
 import { html } from "htm/preact";
 import FormModal from "./FormModal.js";
 
-export default function TeamForm({ open, close, refresh, selected }) {
+export default function TaskForm({ open, close, refresh, selected }) {
   const handleSubmit = async event => {
     event.preventDefault();
 
