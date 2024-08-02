@@ -17,6 +17,22 @@ async function taskPostJSON(data) {
   }
 }
 
+async function deleteTeam(teamId) {
+  const url = "https://api.${window.location.host}/teams/" + teamId;
+  fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      console.log("Resource deleted successfully");
+    })
+    .catch((error) => {
+      console.error(error.message);
+    });
+}
+
 function getTasks(props, tasks) {
   // get all of the tasks from all of the team for the user
   if (props.taskState == "") {
@@ -59,32 +75,40 @@ export default function TeamMain(props) {
     setTasks(data);
   }, [refresh]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (typeOfRequest) => (event) => {
     event.preventDefault();
 
     const data = new FormData(event.target);
 
-    var object = {};
-    //data.forEach((value, key) => (object[key] = value));
-    for (let [key, value] of data) {
-      // convert Date() types properly
-      if (key == "dueDate" && value != "") {
-        object[key] = new Date(value);
-      }
-      // add field if not empty
-      else if (key != "dueDate" && value != "") {
-        // special case for assignedTo as it is a list
-        if (key == "assignedTo") {
-          object[key] = data.getAll("assignedTo");
-        } else {
-          object[key] = value;
+    // POST requests are done by adding teams
+    if (typeOfRequest == "POST") {
+      var object = {};
+      //data.forEach((value, key) => (object[key] = value));
+      for (let [key, value] of data) {
+        // convert Date() types properly
+        if (key == "dueDate" && value != "") {
+          object[key] = new Date(value);
+        }
+        // add field if not empty
+        else if (key != "dueDate" && value != "") {
+          // special case for assignedTo as it is a list
+          if (key == "assignedTo") {
+            object[key] = data.getAll("assignedTo");
+          } else {
+            object[key] = value;
+          }
         }
       }
+      object.team = props.taskState;
+      var json = JSON.stringify(object);
+      taskPostJSON(json);
+      document.getElementById("add-task").hidePopover();
     }
-    object.team = props.taskState;
-    var json = JSON.stringify(object);
-    taskPostJSON(json);
-    document.getElementById("add-task").hidePopover();
+    // DELETE requests are done by deleting teams
+    if (typeOfRequest == "DELETE") {
+      deleteTeam(props.taskState);
+      document.getElementById("delete-team").hidePopover();
+    }
     setTimeout(() => setRefresh(!refresh), 1000);
   };
 
@@ -99,6 +123,39 @@ export default function TeamMain(props) {
           Add Task
         </button>
 
+        ${(() => {
+          if (props.taskState != "") {
+            return html`<button
+                class="right-button button"
+                popovertarget="delete-team"
+              >
+                Delete Team
+              </button>
+              <div id="delete-team" popover="manual">
+                <button
+                  class="close-button"
+                  popovertarget="delete-team"
+                  popovertargetaction="hide"
+                  type="button"
+                  aria-label="Close alert"
+                >
+                  <span aria-hidden="true">❌</span>
+                </button>
+                <form
+                  onSubmit=${handleSubmit("DELETE")}
+                  class="delete-team-form"
+                >
+                  <p>Confirm deleting team</p>
+                  <input
+                    type="submit"
+                    value="Delete Team"
+                    popovertargetaction="hide"
+                  />
+                </form>
+              </div> `;
+          }
+        })()}
+
         <div id="add-task" popover="manual">
           <button
             class="close-button"
@@ -109,7 +166,7 @@ export default function TeamMain(props) {
           >
             <span aria-hidden="true">❌</span>
           </button>
-          <form onSubmit=${handleSubmit}>
+          <form onSubmit=${handleSubmit("POST")}>
             <ul>
               <li>
                 <label for="name">Name:</label><br class="extra-margin" />
