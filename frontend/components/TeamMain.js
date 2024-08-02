@@ -18,19 +18,21 @@ async function taskPostJSON(data) {
 }
 
 async function deleteTeam(teamId) {
-  const url = "https://api.${window.location.host}/teams/" + teamId;
-  fetch(url, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
-    .then((response) => {
-      console.log("Resource deleted successfully");
-    })
-    .catch((error) => {
-      console.error(error.message);
-    });
+  try {
+    const response = await fetch(
+      `https://api.${window.location.host}/teams/${teamId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const result = await response.json();
+    console.log("Success:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 function getTasks(props, tasks) {
